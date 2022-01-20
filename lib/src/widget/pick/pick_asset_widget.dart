@@ -10,14 +10,14 @@ class PickAssetWidget extends StatelessWidget {
   final AssetEntity asset;
   final int thumbSize;
   final PickerDataProvider provider;
-  final Function onTap;
+  final Function? onTap;
   final PickColorMaskBuilder pickColorMaskBuilder;
-  final PickedCheckboxBuilder pickedCheckboxBuilder;
+  final PickedCheckboxBuilder? pickedCheckboxBuilder;
 
   const PickAssetWidget({
-    Key key,
-    @required this.asset,
-    @required this.provider,
+    Key? key,
+    required this.asset,
+    required this.provider,
     this.thumbSize = 100,
     this.onTap,
     this.pickColorMaskBuilder = PickColorMask.buildWidget,
@@ -31,10 +31,10 @@ class PickAssetWidget extends StatelessWidget {
       builder: (_, __) {
         final pickIndex = provider.pickIndex(asset);
         final picked = pickIndex >= 0;
-        return pickColorMaskBuilder?.call(context, picked) ??
+        return pickColorMaskBuilder.call(context, picked); /*??
             PickColorMask(
               picked: picked,
-            );
+            );*/
       },
     );
 
@@ -52,6 +52,25 @@ class PickAssetWidget extends StatelessWidget {
       },
     );
 
+    final uploadedIcon = AnimatedBuilder(
+      animation: provider.isUploadedNotifier,
+      builder: (_, __) {
+        if (provider.uploadedList.contains(asset)) {
+          return Positioned.directional(
+              child: Icon(
+                Icons.cloud_done_outlined,
+                color: Colors.lightBlueAccent,
+                size: 20,
+              ),
+              bottom: 0,
+              end: 8,
+              textDirection: Directionality.of(context));
+        }
+        return Container();
+      },
+    );
+
+    /// стак с изображением, и чекбоксом
     return GestureDetector(
       child: Stack(
         children: <Widget>[
@@ -65,10 +84,12 @@ class PickAssetWidget extends StatelessWidget {
             ),
           ),
           pickMask,
+          Text(asset.id),
+          uploadedIcon,
           checkWidget,
         ],
       ),
-      onTap: onTap,
+      onTap: onTap as void Function()?,
     );
   }
 }

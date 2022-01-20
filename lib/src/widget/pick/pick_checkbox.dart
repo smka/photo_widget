@@ -16,9 +16,9 @@ class PickedCheckbox extends StatelessWidget {
   final double size;
 
   const PickedCheckbox({
-    Key key,
-    @required this.checkIndex,
-    @required this.onClick,
+    Key? key,
+    required this.checkIndex,
+    required this.onClick,
     this.alignment = Alignment.topRight,
     this.radius = 30,
     this.pickedColor = Colors.blue,
@@ -51,7 +51,7 @@ class PickedCheckbox extends StatelessWidget {
       child: GestureDetector(
         behavior: HitTestBehavior.translucent,
         onTap: () {
-          onClick?.call();
+          onClick.call();
         },
         child: Padding(
           padding: padding,
@@ -60,12 +60,13 @@ class PickedCheckbox extends StatelessWidget {
             height: size,
             decoration: decoration,
             child: Center(
-              child: Text(
+              child: checked ? Icon(Icons.check, size: 16,) : Container(),
+              /*Text(
                 checkText,
                 style: TextStyle(
                   color: Colors.white,
                 ),
-              ),
+              ),*/
             ),
           ),
         ),

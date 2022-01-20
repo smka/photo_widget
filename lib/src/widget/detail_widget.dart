@@ -7,8 +7,8 @@ class PickedDetailWidget extends StatefulWidget {
   final List<AssetEntity> entityList;
 
   const PickedDetailWidget({
-    Key key,
-    @required this.entityList,
+    Key? key,
+    required this.entityList,
     int initIndex = 0,
   }) : super(key: key);
 
@@ -26,21 +26,27 @@ class _PickedDetailWidgetState extends State<PickedDetailWidget> {
   }
 
   Widget _buildItem(BuildContext context, int index) {
-    return Image(
-      image: AssetEntityFileImage(
-        widget.entityList[index],
-      ),
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Image(
+          image: AssetEntityFileImage(
+            widget.entityList[index],
+          ),
+        ),
+        Text(widget.entityList[index].title!)
+      ],
     );
   }
 }
 
 class PathDetailWidget extends StatefulWidget {
-  final AssetPathEntity path;
-  final int initIndex;
+  final AssetPathEntity? path;
+  final int? initIndex;
 
   const PathDetailWidget({
-    Key key,
-    @required this.path,
+    Key? key,
+    required this.path,
     this.initIndex = 0,
   }) : super(key: key);
 
@@ -49,7 +55,7 @@ class PathDetailWidget extends StatefulWidget {
 }
 
 class _PathDetailWidgetState extends State<PathDetailWidget> {
-  PageController controller;
+  PageController? controller;
 
   @override
   void initState() {
@@ -63,20 +69,26 @@ class _PathDetailWidgetState extends State<PathDetailWidget> {
   Widget build(BuildContext context) {
     return PageView.builder(
       itemBuilder: _buildItem,
-      itemCount: widget.path.assetCount,
+      itemCount: widget.path!.assetCount,
       controller: controller,
     );
   }
 
   Widget _buildItem(BuildContext context, int index) {
     final size = MediaQuery.of(context).size;
-    return Image(
-      image: PathItemImageProvider(
-        index: index,
-        path: widget.path,
-        width: size.width,
-        height: size.height,
-      ),
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Image(
+          image: PathItemImageProvider(
+            index: index,
+            path: widget.path,
+            width: size.width,
+            height: size.height,
+          ),
+        ),
+        Text(widget.path!.id.toString())
+      ],
     );
   }
 }

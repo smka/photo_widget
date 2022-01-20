@@ -10,8 +10,8 @@ typedef Widget PickSureTextBuilder(
 
 class PickSureButton extends StatelessWidget {
   final PickerDataProvider provider;
-  final PickSureCallback onTap;
-  final PickSureTextBuilder builder;
+  final PickSureCallback? onTap;
+  final PickSureTextBuilder? builder;
   final double radius;
   final Color disableColor;
   final Color color;
@@ -21,33 +21,33 @@ class PickSureButton extends StatelessWidget {
   final EdgeInsetsGeometry padding;
 
   const PickSureButton({
-    Key key,
-    @required this.provider,
+    Key? key,
+    required this.provider,
     this.onTap,
     this.builder,
     this.radius = 3,
     this.defaultText = "发送",
     this.disableColor = const Color(0xFF434343),
     this.color = Colors.blue,
-    this.textStyle = const TextStyle(fontSize: 14, color: Colors.white),
+    this.textStyle = const TextStyle(fontSize: 18, color: Colors.white),
     this.disableTextStyle = const TextStyle(
-      fontSize: 14,
+      fontSize: 18,
       color: const Color(0xFF696969),
     ),
-    this.padding = const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+    this.padding = const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
   }) : super(key: key);
 
   List<AssetEntity> get picked => provider.picked;
 
   @override
   Widget build(BuildContext context) {
-    final disableStyle = this.disableTextStyle ?? textStyle;
+    final disableStyle = this.disableTextStyle /*?? textStyle*/;
     return AnimatedBuilder(
       animation: provider.pickedNotifier,
       builder: (_, __) {
         if (builder != null) {
           return InkWell(
-            child: builder(context, picked, provider.maxNotifier.value),
+            child: builder!(context, picked, provider.maxNotifier.value),
             onTap: () => onTap?.call(picked),
           );
         }
@@ -73,7 +73,7 @@ class PickSureButton extends StatelessWidget {
                 child: Container(
                   padding: padding,
                   child: Text(
-                    '$defaultText(${picked.length}/${provider.maxNotifier.value})',
+                    '$defaultText (${picked.length})', // (${picked.length}/${provider.maxNotifier.value})
                     style: textStyle,
                   ),
                 ),

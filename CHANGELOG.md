@@ -1,3 +1,7 @@
+## [0.1.0]
+
+Null safety support.
+
 ## [0.0.3]
 
 Rename example directory name.

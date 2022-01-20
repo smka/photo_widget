@@ -11,7 +11,7 @@ typedef Widget AssetPathWidgetBuilder(
 typedef void OnAssetItemClick(BuildContext context, AssetEntity entity,int index);
 
 class AssetPathWidget extends StatefulWidget {
-  final AssetPathEntity path;
+  final AssetPathEntity? path;
   final AssetWidgetBuilder buildItem;
   final int rowCount;
   final int thumbSize;
@@ -20,11 +20,11 @@ class AssetPathWidget extends StatefulWidget {
   final bool loadWhenScrolling;
   final double dividerWidth;
   final Color dividerColor;
-  final OnAssetItemClick onAssetItemClick;
+  final OnAssetItemClick? onAssetItemClick;
 
   const AssetPathWidget({
-    Key key,
-    @required this.path,
+    Key? key,
+    required this.path,
     this.buildItem = AssetWidget.buildWidget,
     this.rowCount = 4,
     this.thumbSize = 100,
@@ -76,12 +76,12 @@ class _AssetPathWidgetState extends State<AssetPathWidget> {
       return widget.buildItem(context, asset, widget.thumbSize);
     } else {
       return FutureBuilder<List<AssetEntity>>(
-        future: widget.path.getAssetListRange(start: index, end: index + 1),
+        future: widget.path!.getAssetListRange(start: index, end: index + 1),
         builder: (ctx, snapshot) {
-          if (!snapshot.hasData || snapshot.data.isEmpty) {
+          if (!snapshot.hasData || snapshot.data!.isEmpty) {
             return widget.scrollingWidget;
           }
-          final asset = snapshot.data[0];
+          final asset = snapshot.data![0];
           cacheMap[index] = asset;
           return widget.buildItem(context, asset, widget.thumbSize);
         },
@@ -95,7 +95,7 @@ class _AssetPathWidgetState extends State<AssetPathWidget> {
         onTap: () async {
           var asset = cacheMap[index];
           if (asset == null) {
-            asset = (await widget.path
+            asset = (await widget.path!
                 .getAssetListRange(start: index, end: index + 1))[0];
             cacheMap[index] = asset;
           }
@@ -108,7 +108,7 @@ class _AssetPathWidgetState extends State<AssetPathWidget> {
       onTap: () async {
         var asset = cacheMap[index];
         if (asset == null) {
-          asset = (await widget.path
+          asset = (await widget.path!
               .getAssetListRange(start: index, end: index + 1))[0];
           cacheMap[index] = asset;
         }
@@ -154,7 +154,7 @@ class _AssetPathWidgetState extends State<AssetPathWidget> {
 }
 
 class _WrapItem extends StatefulWidget {
-  final AssetPathEntity path;
+  final AssetPathEntity? path;
   final int index;
   final void Function(AssetEntity entity) onLoaded;
   final ValueNotifier<bool> valueNotifier;
@@ -162,19 +162,19 @@ class _WrapItem extends StatefulWidget {
   final AssetWidgetBuilder buildItem;
   final int thumbSize;
   final Widget scrollingPlaceHolder;
-  final AssetEntity entity;
-  final Map<int, AssetEntity> cacheMap;
+  final AssetEntity? entity;
+  final Map<int, AssetEntity>? cacheMap;
   const _WrapItem({
-    Key key,
-    @required this.path,
-    @required this.index,
-    @required this.onLoaded,
-    @required this.valueNotifier,
-    @required this.loaded,
-    @required this.buildItem,
-    @required this.thumbSize,
-    @required this.scrollingPlaceHolder,
-    @required this.entity,
+    Key? key,
+    required this.path,
+    required this.index,
+    required this.onLoaded,
+    required this.valueNotifier,
+    required this.loaded,
+    required this.buildItem,
+    required this.thumbSize,
+    required this.scrollingPlaceHolder,
+    required this.entity,
     this.cacheMap,
   }) : super(key: key);
 
@@ -188,12 +188,12 @@ class __WrapItemState extends State<_WrapItem> {
   bool _loaded = false;
 
   bool get loaded => _loaded || widget.loaded;
-  AssetEntity assetEntity;
+  AssetEntity? assetEntity;
 
   @override
   void initState() {
     super.initState();
-    assetEntity = widget.cacheMap[widget.index];
+    assetEntity = widget.cacheMap![widget.index];
     widget.valueNotifier.addListener(onChange);
     if (!scrolling) {
       _load();
@@ -223,12 +223,14 @@ class __WrapItemState extends State<_WrapItem> {
   Widget build(BuildContext context) {
     if (assetEntity == null) {
       return widget.scrollingPlaceHolder;
+    } else {
+      return widget.buildItem(context, assetEntity!, widget.thumbSize);
     }
-    return widget.buildItem(context, assetEntity, widget.thumbSize);
+
   }
 
   Future<void> _load() async {
-    final list = await widget.path
+    final list = await widget.path!
         .getAssetListRange(start: widget.index, end: widget.index + 1);
     if (list != null && list.isNotEmpty) {
       final asset = list[0];
