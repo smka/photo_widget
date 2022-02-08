@@ -1,5 +1,5 @@
 import 'dart:async';
-
+import 'package:drag_select_grid_view/drag_select_grid_view.dart';
 import 'package:flutter/material.dart';
 import 'package:photo_manager/photo_manager.dart';
 import 'asset_widget.dart';
@@ -45,9 +45,26 @@ class _AssetPathWidgetState extends State<AssetPathWidget> {
     return {};
   }
 
+  final controller = DragSelectGridViewController();
+
   final cacheMap = _createMap();
 
   final scrolling = ValueNotifier(false);
+
+  @override
+  void initState() {
+    super.initState();
+    controller.addListener(scheduleRebuild);
+    //controller.value = Selection({1});
+  }
+
+  @override
+  void dispose() {
+    controller.removeListener(scheduleRebuild);
+    super.dispose();
+  }
+
+  void scheduleRebuild() => setState(() {});
 
   @override
   Widget build(BuildContext context) {
@@ -57,6 +74,7 @@ class _AssetPathWidgetState extends State<AssetPathWidget> {
         color: widget.dividerColor,
         child: GridView.builder(
           key: ValueKey(widget.path),
+          //gridController: controller,
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: widget.rowCount,
             crossAxisSpacing: widget.dividerWidth,
@@ -65,6 +83,7 @@ class _AssetPathWidgetState extends State<AssetPathWidget> {
           itemBuilder: (context, index) => _buildItem(context, index),
           itemCount: widget.path?.assetCount ?? 0,
           addRepaintBoundaries: true,
+          // shrinkWrap: true,
         ),
       ),
     );
@@ -99,7 +118,7 @@ class _AssetPathWidgetState extends State<AssetPathWidget> {
                 .getAssetListRange(start: index, end: index + 1))[0];
             cacheMap[index] = asset;
           }
-          widget.onAssetItemClick?.call(context, asset,index);
+          widget.onAssetItemClick?.call(context, asset, index);
         },
         child: _buildScrollItem(context, index),
       );

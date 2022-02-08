@@ -84,7 +84,7 @@ class PickAssetWidget extends StatelessWidget {
             ),
           ),
           pickMask,
-          Text(asset.id),
+          //Text(asset.id),
           uploadedIcon,
           checkWidget,
         ],
