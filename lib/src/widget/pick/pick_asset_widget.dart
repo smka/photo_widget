@@ -31,7 +31,8 @@ class PickAssetWidget extends StatelessWidget {
       builder: (_, __) {
         final pickIndex = provider.pickIndex(asset);
         final picked = pickIndex >= 0;
-        return pickColorMaskBuilder.call(context, picked); /*??
+        return pickColorMaskBuilder.call(context,
+            picked); /*??
             PickColorMask(
               picked: picked,
             );*/
@@ -52,19 +53,37 @@ class PickAssetWidget extends StatelessWidget {
       },
     );
 
+    final videoIcon = AnimatedBuilder(
+      animation: provider,
+      builder: (_, __) {
+        if (asset.type == AssetType.video) {
+          return Positioned(
+            child: Icon(
+              Icons.videocam_outlined,
+              color: Colors.purple.shade300,
+              size: 24,
+            ),
+            bottom: -2,
+            left: 4,
+          );
+        }
+        return Container();
+      },
+    );
+
     final uploadedIcon = AnimatedBuilder(
       animation: provider.isUploadedNotifier,
       builder: (_, __) {
         if (provider.uploadedList.contains(asset)) {
-          return Positioned.directional(
-              child: Icon(
-                Icons.cloud_done_outlined,
-                color: Colors.lightBlueAccent,
-                size: 20,
-              ),
-              bottom: 0,
-              end: 8,
-              textDirection: Directionality.of(context));
+          return Positioned(
+            child: Icon(
+              Icons.cloud_done_outlined,
+              color: Colors.lightBlueAccent,
+              size: 20,
+            ),
+            bottom: 0,
+            right: 8,
+          );
         }
         return Container();
       },
@@ -85,6 +104,7 @@ class PickAssetWidget extends StatelessWidget {
           ),
           pickMask,
           //Text(asset.id),
+          videoIcon,
           uploadedIcon,
           checkWidget,
         ],
