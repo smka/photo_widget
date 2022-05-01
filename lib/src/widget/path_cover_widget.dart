@@ -62,7 +62,7 @@ class PathCoverImageProvider extends ImageProvider<PathCoverImageProvider> {
     final coverEntity =
         (await key.entity.getAssetListRange(start: index, end: index + 1))[0];
 
-    final bytes = await coverEntity.thumbDataWithSize(thumbSize, thumbSize) as Uint8List;
+    final bytes = await coverEntity.thumbnailDataWithSize(ThumbnailSize.square(thumbSize)) as Uint8List;
 
     return decode(bytes);
   }
