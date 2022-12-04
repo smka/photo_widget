@@ -104,6 +104,14 @@ class _PhotoPickHomePageState extends State<PhotoPickHomePage> {
   }
 
   Widget _buildBottomBar(BuildContext context, PickerDataProvider provider) {
+    final ButtonStyle flatButtonStyle = TextButton.styleFrom(
+      backgroundColor: Colors.blue,
+      padding: EdgeInsets.all(8),
+      disabledForegroundColor: pickTheme.disableColor,
+      textStyle: TextStyle(color: pickTheme.textColor)
+      //few more styles
+    );
+
     final originCheck = AnimatedBuilder(
       animation: provider.isOriginNotifier,
       builder: (ctx, __) {
@@ -142,9 +150,8 @@ class _PhotoPickHomePageState extends State<PhotoPickHomePage> {
     final previewButton = AnimatedBuilder(
       animation: provider.pickedNotifier,
       builder: (_, __) {
-        return FlatButton(
-          disabledTextColor: pickTheme.disableColor,
-          textColor: pickTheme.textColor,
+        return TextButton(
+          style: flatButtonStyle,
           onPressed: provider.picked.isEmpty
               ? null
               : () {

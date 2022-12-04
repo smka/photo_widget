@@ -65,7 +65,7 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       body: Column(
         children: <Widget>[
-          RaisedButton(
+          ElevatedButton(
             onPressed: _refreshGalleryList,
             child: Text('refresh gallery list'),
           ),
